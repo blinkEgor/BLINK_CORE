@@ -30,4 +30,4 @@ cmake -B $BUILD_DIR -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBINARY_NAME=$BINARY_NAME
 cmake --build $BUILD_DIR
 
 # Финальное сообщение
-echo "The binary is ready: $BUILD_DIR/bin/$BINARY_NAME"
+echo "The binary is ready: bin/$BINARY_NAME"
