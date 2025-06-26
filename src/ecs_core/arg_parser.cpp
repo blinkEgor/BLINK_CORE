@@ -1,4 +1,4 @@
-#include "../include/ecs_core/arg_parser.h"
+#include "../../include/ecs_core/arg_parser.h"
 
 bool parse_args( int argc, const char** argv ) {
     // Нет аргументов — идём в цикл

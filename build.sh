@@ -5,16 +5,28 @@
 # ----------------------------------------
 
 # Параметры по умолчанию
-BUILD_TYPE="Debug"
-BINARY_NAME="core"
+BUILD_TYPE="Debug" # Тип сборки ( Debug/Release )
+BINARY_NAME="core" # Имя бинарника
+
+ENABLE_SDL="OFF" # Подключить SDL
+
+TARGET_OS="linux" # Сборка под Linux
 
 # Аргументы из командной строки ( если переданы )
 if [ ! -z "$1" ]; then
-  BUILD_TYPE=$1  # Первый аргумент — тип сборки ( Debug/Release )
+  BUILD_TYPE=$1
 fi
 
 if [ ! -z "$2" ]; then
-  BINARY_NAME=$2  # Второй аргумент — имя бинарника
+  BINARY_NAME=$2
+fi
+
+if [ ! -z "$3" ]; then
+  ENABLE_SDL=$3
+fi
+
+if [ ! -z "$4" ]; then
+  TARGET_OS=$4
 fi
 
 # Каталог сборки
@@ -24,7 +36,11 @@ BUILD_DIR="build"
 mkdir -p $BUILD_DIR
 
 # Конфигурация сборки
-cmake -B $BUILD_DIR -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBINARY_NAME=$BINARY_NAME
+cmake -B $BUILD_DIR \
+      -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+      -DBINARY_NAME=$BINARY_NAME \
+      -DENABLE_SDL=$ENABLE_SDL \
+      -DTARGET_OS=$TARGET_OS
 
 # Сборка
 cmake --build $BUILD_DIR

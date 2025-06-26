@@ -1,4 +1,4 @@
-#include "../include/ecs_core/config.h"
+#include "../../include/ecs_core/config.h"
 
 static std::unordered_map< std::string, std::string > config_map;
 

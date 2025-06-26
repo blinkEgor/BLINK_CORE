@@ -1,14 +1,17 @@
+# Этот строка говорит CMake, что для сборки нужна не менее чем 3.16-я версия CMake.
 cmake_minimum_required(VERSION 3.16)
 
-# Название проекта и версия
+# Это объявляет проект ECS_CORE
+# VERSION 0.1 — это назначенная точка разработки
+# LANGUAGES CXX — проект на C++
 project(ECS_CORE VERSION 0.1 LANGUAGES CXX)
 
 # Конфигурация сборки
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_BUILD_TYPE Debug) # По умолчанию "Debug"
+set(CMAKE_CXX_STANDARD 17)              # Требуемый стандарт C++
+set(CMAKE_CXX_STANDARD_REQUIRED ON)     # Не разрешать откат на более старые стандарты
+set(CMAKE_BUILD_TYPE Debug)             # Сборка в режиме Debug по умолчанию
 
-# ОС по умлочанию
+# ОС Linux по умолчанию
 add_definitions(-DTARGET_OS_LINUX)
 
 # Имя исполняемого файла (бинарника)
@@ -20,48 +23,41 @@ endif()
 set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 set(INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
 
-# Где .h-файлы (public API)
+# Где .h-файлы
 include_directories(${INCLUDE_DIR})
 
-# Опции расширения в будущем (временно отключены)
-option(ENABLE_API "Подключить API" OFF)
-option(ENABLE_SDL "Подключить SDL" OFF)
+# Опции для будущих расширений
+option(ENABLE_SDL2 "Connect SDL2" OFF)
 
-if (ENABLE_API)
-    message(STATUS "API включено")
-    add_definitions(-DENABLE_API)
+if (ENABLE_SDL2)
+    message(STATUS "SDL2 is ON")
+    add_definitions(-DENABLE_SDL)
 endif()
+
+# Файлы с исходниками ядра
+file(GLOB_RECURSE ECS_CORE_SRC
+    ${SRC_DIR}/ecs_core/*.cpp
+)
 
 # Сборка бинарника
 add_executable(${BINARY_NAME}
     ${SRC_DIR}/main.cpp
-    ${SRC_DIR}/config.cpp
-    ${SRC_DIR}/logger.cpp
-    ${SRC_DIR}/core_loop.cpp
-    ${SRC_DIR}/arg_parser.cpp
+    ${ECS_CORE_SRC}
 )
 
-# ../bin относительно папки сборки
+# Где будет оказываться готовый бинарник
 set(OUTPUT_BIN_DIR "${CMAKE_SOURCE_DIR}/bin")
-
-# Установка бинарника в bin/
 set_target_properties(${BINARY_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_BIN_DIR}
 )
 
-# Выбор операционной системы под которую будет создан бинарник
-if (UNIX AND NOT APPLE)
-    set(TARGET_OS "linux")
+# Выбор ОС под которую будет создан бинарник
+if (TARGET_OS STREQUAL "linux")
     add_definitions(-DTARGET_OS_LINUX)
-elseif(WIN32)
-    set(TARGET_OS "windows")
+elseif(TARGET_OS STREQUAL "windows")
     add_definitions(-DTARGET_OS_WINDOWS)
-elseif(APPLE)
-    set(TARGET_OS "macos")
-    add_definitions(-DTARGET_OS_MACOS)
-else()
-    set(TARGET_OS "unknown")
+# Тут продолжать другие ОС
 endif()
 
-# Сообщение после сборки
+# Сообщение после успешной сборки
 message(STATUS "ECS_CORE core ${BINARY_NAME} built for ${TARGET_OS}")
