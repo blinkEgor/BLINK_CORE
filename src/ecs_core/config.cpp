@@ -10,12 +10,14 @@ static std::unordered_map< std::string, std::string > config_map;
 // - - Извлекает ключь до первого пробела
 // - - Извлекает символ "="
 // - - Извлекает остаток строки как значение
+// - - Отсекает у значения пробелы спереди и в конце
 bool Config::load( const std::string& path ) {
     std::ifstream file( path );
 
     if ( !file.is_open() ) {
-        // !!! ЗАМЕНИТЬ НА ЛОГ
-        std::cerr << "[ERROR] Failed to open config: " << path << std::endl;
+        Logger::log( "Failed to open config: " + path, LogLevel::ERROR );
+        // НА БУДУЩЕЕ, ТУТ СОЗДАТЬ КОНФИГ С ДЕФОЛТНЫМИ ОПЦИЯМИ И ЗНАЧЕНИЯМИ
+        // ТОГДА НЕ ПРИДЕТСЯ ВОЗВРАЩАТЬ И МОЖНО ЗАМЕНИТЬ НА WARNING
         return false;
     }
 
@@ -29,6 +31,8 @@ bool Config::load( const std::string& path ) {
         if ( !( iss >> key >> eq ) ) continue;
 
         std::getline( iss, value );
+        value.erase( 0, value.find_first_not_of( " \t" ) );
+        value.erase( value.find_last_not_of( " \t" ) + 1 );
 
         if ( eq != "=" ) continue;
 
@@ -58,4 +62,12 @@ void Config::print() {
         // !!! Заменить на систему ввода/вывода CLI
         std::cout << " " << key << " = " << value << std::endl; 
     }
+}
+
+// ### Функция инициализации системы конфигураций на уровне ЯДРА
+// 1. Загрузка конфигурационного файла
+// 2. Сообщение инициализации конфиг-системы
+void Config::init() {
+    Config::load();
+    Logger::log( Config::get( "config_init_message" ), LogLevel::INFO );
 }

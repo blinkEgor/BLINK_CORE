@@ -6,12 +6,11 @@
 int main( int argc, const char** argv ) {
     // === ИНИЦИАЛИЗАЦИЯ ЯДРА ===
     Logger::init();
-    Config::load();
+    Config::init();
     if ( !parse_args( argc, argv ) ) {
         Logger::log( "Parser can't load", LogLevel::FATAL );
         return 1;
     }
-    std::cout << Config::get( "greeting_message" ) << std::endl;
 
     // === ПОДКЛЮЧЕНИЕ API ===
     
