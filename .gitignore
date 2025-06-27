@@ -34,4 +34,4 @@
 # build directory
 build
 bin
-app
+logs

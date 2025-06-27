@@ -31,7 +31,7 @@ option(ENABLE_SDL2 "Connect SDL2" OFF)
 
 if (ENABLE_SDL2)
     message(STATUS "SDL2 is ON")
-    add_definitions(-DENABLE_SDL)
+    add_definitions(-DENABLE_SDL2)
 endif()
 
 # Файлы с исходниками ядра

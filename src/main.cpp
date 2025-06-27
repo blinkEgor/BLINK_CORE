@@ -1,15 +1,29 @@
 #include <iostream> // !!! Временно для печать в CLI
 #include "../include/ecs_core/arg_parser.h"
 #include "../include/ecs_core/config.h"
+#include "../include/ecs_core/logger.h"
 
 int main( int argc, const char** argv ) {
+    // === ИНИЦИАЛИЗАЦИЯ ЯДРА ===
+    Logger::init();
+    Config::load();
     if ( !parse_args( argc, argv ) ) {
-        // Тут лог ошибки
-        std::cerr << "[ERROR] " << std::endl;
+        Logger::log( "Parser can't load", LogLevel::FATAL );
         return 1;
     }
-
-    Config::load();
     std::cout << Config::get( "greeting_message" ) << std::endl;
+
+    // === ПОДКЛЮЧЕНИЕ API ===
+    
+    // ПОКА ЧТО НЕ СУЩЕСТВУЕТ
+
+
+    // === ИНИЦИАЛИЗАЦИЯ ЗАВИСИМОСТЕЙ ===
+    #ifdef ENABLE_SDL2
+        // Инициализация SDL2
+    #endif
+
+    // === ГЛАВНЫЙ ЦИКЛ ===
+
     return 0;
 }
