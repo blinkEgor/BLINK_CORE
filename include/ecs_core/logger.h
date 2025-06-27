@@ -24,4 +24,5 @@ namespace Logger {
     std::string get_current_time();
     void log( const std::string& message, LogLevel level = LogLevel::INFO );
     void init();
+    void shutdown();
 }

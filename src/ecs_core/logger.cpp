@@ -72,12 +72,12 @@ void Logger::log( const std::string& message, LogLevel level ) {
     std::string filename = "logs/log_" + date_str + ".txt";
     std::ofstream log_file( filename, std::ios::app );
     if( log_file.is_open() ) {
-        log_file << "[" << time_str << "] " << level_str << message << std::endl << std::endl;
+        log_file << "[" << time_str << "] " << level_str << message << std::endl;
         log_file.close();
     } else {
-        std::cerr << "[" << time_str << "] " << "[ERROR] Failed to open log file!" << std::endl << std::endl;
+        std::cerr << "[" << time_str << "] " << "[ERROR] Failed to open log file!" << std::endl;
     }
-    std::cerr << "[" << time_str << "] " << level_str << message << std::endl << std::endl;
+    std::cerr << "[" << time_str << "] " << level_str << message << std::endl;
 }
 
 // ### Функция инициализации системы логирования на уровне ЯДРА
@@ -90,4 +90,14 @@ void Logger::init() {
     }
     cleanup_logs();
     log( "Logger initialized", LogLevel::INFO );
+}
+
+// ### Простая функция задача которой во время логирования в конце сессии добавить отступ
+void Logger::shutdown() {
+    std::ofstream log_file( "logs/log_" + get_current_time().substr( 0, 10 ) + ".txt", std::ios::app );
+    if ( log_file.is_open() ) {
+        log_file << std::endl;
+        log_file.close();
+    }
+    std::cerr << std::endl;
 }
