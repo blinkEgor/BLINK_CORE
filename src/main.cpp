@@ -1,21 +1,21 @@
 #include <iostream> // !!! Временно для печать в CLI
-#include "../include/ecs_core/arg_parser.h"
-#include "../include/ecs_core/config.h"
-#include "../include/ecs_core/logger.h"
+#include "../include/blink_core/arg_parser.h"
+#include "../include/blink_core/config.h"
+#include "../include/blink_core/logger.h"
 
 int main( int argc, const char** argv ) {
     // === ИНИЦИАЛИЗАЦИЯ ЯДРА ===
-    Logger::init();
-    Config::init();
-    if ( !parse_args( argc, argv ) ) {
-        Logger::log( "Parser can't load", LogLevel::FATAL );
+    blink_logger::init();
+    blink_config::init();
+    if ( !arg_parser( argc, argv ) ) {
+        blink_logger::log( "Parser can't load", log_level::FATAL );
         return 1;
     }
 
     // === ПОДКЛЮЧЕНИЕ API ===
-    
-    // ПОКА ЧТО НЕ СУЩЕСТВУЕТ
-
+    #ifdef ENABLE_BLINK_API
+        // Инициализация API
+    #endif
 
     // === ИНИЦИАЛИЗАЦИЯ ЗАВИСИМОСТЕЙ ===
     #ifdef ENABLE_SDL2
@@ -33,7 +33,7 @@ int main( int argc, const char** argv ) {
     #endif
     
     // В самом конце для финалной отладки (с лога начали, логом закончили)
-    Logger::shutdown();
+    blink_logger::shutdown();
 
     return 0;
 }

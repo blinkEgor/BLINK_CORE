@@ -1,4 +1,4 @@
-#include "../../include/ecs_core/logger.h"
+#include "../../include/blink_core/logger.h"
 
 // ### функция для удаления устаревших логов
 // - Кэширование пространства имён "std::filesystem" в псевдониме "fs"
@@ -10,7 +10,7 @@
 // - Удаление всех логов, начиная с позиции "max_logs"
 // - - Пример: если файлов 10, а max_logs = 7 → удалятся последние 3
 // - - Удаление происходит через "fs::remove()"
-void Logger::cleanup_logs( int max_logs ) {
+void blink_logger::cleanup_logs( int max_logs ) {
     namespace fs = std::filesystem;
     std::vector<fs::directory_entry> logs;
 
@@ -35,7 +35,7 @@ void Logger::cleanup_logs( int max_logs ) {
 // - Преобразование в структуру tm ( для форматирования )
 // - Использование stringstream для форматирования
 // - Возвращаемый формат: "гггг-мм-дд чч:мм:сс"
-std::string Logger::get_current_time() {
+std::string blink_logger::get_current_time() {
     auto now = std::chrono::system_clock::now();
     std::time_t now_time_t = std::chrono::system_clock::to_time_t( now );
     std::tm now_tm = *std::localtime( &now_time_t );
@@ -53,22 +53,22 @@ std::string Logger::get_current_time() {
 // - Записывание сообщения в файл
 // - - Вывод ошибки в cli, при невозможности открыть файл лога
 // - Вывод сообщения в cli
-void Logger::log( const std::string& message, LogLevel level ) {
+void blink_logger::log( const std::string& message, log_level level ) {
     std::string time_str = get_current_time();
     std::string level_str;
     switch ( level ) {
-        case LogLevel::INFO: level_str = "[INFO] "; break;
-        case LogLevel::WARNING: level_str = "[WARNING] "; break;
-        case LogLevel::ERROR: level_str = "[ERROR] "; break;
-        case LogLevel::FATAL: level_str = "[FATAL] "; break;
-        case LogLevel::DEBUG: level_str = "[DEBUG] "; break;
-        case LogLevel::TRACE: level_str = "[TRACE] "; break;
+        case log_level::INFO: level_str = "[INFO] "; break;
+        case log_level::WARNING: level_str = "[WARNING] "; break;
+        case log_level::ERROR: level_str = "[ERROR] "; break;
+        case log_level::FATAL: level_str = "[FATAL] "; break;
+        case log_level::DEBUG: level_str = "[DEBUG] "; break;
+        case log_level::TRACE: level_str = "[TRACE] "; break;
         default: level_str = "[UNKNOWN] "; break;
     }
     if ( !std::filesystem::exists( "logs" ) ) {
         std::filesystem::create_directory( "logs" );
     }
-    std::string date_str = Logger::get_current_time().substr( 0, 10 );
+    std::string date_str = blink_logger::get_current_time().substr( 0, 10 );
     std::string filename = "logs/log_" + date_str + ".txt";
     std::ofstream log_file( filename, std::ios::app );
     if( log_file.is_open() ) {
@@ -84,16 +84,16 @@ void Logger::log( const std::string& message, LogLevel level ) {
 // 1. Создать папку logs, если её нет
 // 2. Очистить старые логи
 // 3. Лог: начало новой сессии
-void Logger::init() {
+void blink_logger::init() {
     if ( !std::filesystem::exists( "logs" ) ) {
         std::filesystem::create_directory( "logs" );
     }
     cleanup_logs();
-    log( "Logger initialized", LogLevel::INFO );
+    log( "blink_logger initialized", log_level::INFO );
 }
 
 // ### Простая функция задача которой во время логирования в конце сессии добавить отступ
-void Logger::shutdown() {
+void blink_logger::shutdown() {
     std::ofstream log_file( "logs/log_" + get_current_time().substr( 0, 10 ) + ".txt", std::ios::app );
     if ( log_file.is_open() ) {
         log_file << std::endl;

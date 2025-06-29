@@ -2,4 +2,4 @@
 #include <iostream> // !! Заменить на систему логов и 
 #include <string>
 
-bool parse_args( int argc, const char** argv );
+bool arg_parser( int argc, const char** argv );

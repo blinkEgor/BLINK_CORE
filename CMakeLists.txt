@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.16)
 # Это объявляет проект ECS_CORE
 # VERSION 0.1 — это назначенная точка разработки
 # LANGUAGES CXX — проект на C++
-project(ECS_CORE VERSION 0.1 LANGUAGES CXX)
+project(BLINK_CORE VERSION 0.1 LANGUAGES CXX)
 
 # Конфигурация сборки
 set(CMAKE_CXX_STANDARD 17)              # Требуемый стандарт C++
@@ -27,8 +27,13 @@ set(INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
 include_directories(${INCLUDE_DIR})
 
 # Опции для будущих расширений
+option(ENABLE_BLINK_API "Connect BLINK_API" OFF)
 option(ENABLE_SDL2 "Connect SDL2" OFF)
 
+if (ENABLE_BLINK_API)
+    message(STATUS "BLINK_API is ON")
+    add_definitions(-DENABLE_BLINK_API)
+endif()
 if (ENABLE_SDL2)
     message(STATUS "SDL2 is ON")
     add_definitions(-DENABLE_SDL2)
@@ -36,7 +41,7 @@ endif()
 
 # Файлы с исходниками ядра
 file(GLOB_RECURSE ECS_CORE_SRC
-    ${SRC_DIR}/ecs_core/*.cpp
+    ${SRC_DIR}/blink_core/*.cpp
 )
 
 # Сборка бинарника
@@ -60,4 +65,4 @@ elseif(TARGET_OS STREQUAL "windows")
 endif()
 
 # Сообщение после успешной сборки
-message(STATUS "ECS_CORE core ${BINARY_NAME} built for ${TARGET_OS}")
+message(STATUS "BLINK_CORE core ${BINARY_NAME} built for ${TARGET_OS}")

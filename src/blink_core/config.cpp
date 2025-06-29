@@ -1,4 +1,4 @@
-#include "../../include/ecs_core/config.h"
+#include "../../include/blink_core/config.h"
 
 static std::unordered_map< std::string, std::string > config_map;
 
@@ -11,11 +11,11 @@ static std::unordered_map< std::string, std::string > config_map;
 // - - Извлекает символ "="
 // - - Извлекает остаток строки как значение
 // - - Отсекает у значения пробелы спереди и в конце
-bool Config::load( const std::string& path ) {
+bool blink_config::load( const std::string& path ) {
     std::ifstream file( path );
 
     if ( !file.is_open() ) {
-        Logger::log( "Failed to open config: " + path, LogLevel::ERROR );
+        blink_logger::log( "Failed to open config: " + path, log_level::ERROR );
         // НА БУДУЩЕЕ, ТУТ СОЗДАТЬ КОНФИГ С ДЕФОЛТНЫМИ ОПЦИЯМИ И ЗНАЧЕНИЯМИ
         // ТОГДА НЕ ПРИДЕТСЯ ВОЗВРАЩАТЬ И МОЖНО ЗАМЕНИТЬ НА WARNING
         return false;
@@ -46,7 +46,7 @@ bool Config::load( const std::string& path ) {
 // Выполняет действия: 
 // - Ищит в словаре ключей и значений нужный заданный параметром ключ и возвращает значение
 // - Если ключ не найден, то вернёт значение по умолчанию
-std::string Config::get( const std::string& key, const std::string& fallback ) {
+std::string blink_config::get( const std::string& key, const std::string& fallback ) {
     if ( config_map.find( key ) != config_map.end() ) return config_map[ key ];
     return fallback;
 }
@@ -55,7 +55,7 @@ std::string Config::get( const std::string& key, const std::string& fallback ) {
 // Выполняет действия: 
 // - Печатает сообщение о том что будет напечатано содержимое конфига
 // - Построчно печатает содержимое конфига
-void Config::print() {
+void blink_config::print() {
     // !!! Заменить на систему ввода/вывода CLI
     std::cout << "[CONFIG]:\n";
     for ( const auto& [ key, value ] : config_map ) {
@@ -67,7 +67,7 @@ void Config::print() {
 // ### Функция инициализации системы конфигураций на уровне ЯДРА
 // 1. Загрузка конфигурационного файла
 // 2. Сообщение инициализации конфиг-системы
-void Config::init() {
-    Config::load();
-    Logger::log( Config::get( "config_init_message" ), LogLevel::INFO );
+void blink_config::init() {
+    blink_config::load();
+    blink_logger::log( blink_config::get( "config_init_message" ), log_level::INFO );
 }

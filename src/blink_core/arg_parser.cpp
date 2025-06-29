@@ -1,6 +1,6 @@
-#include "../../include/ecs_core/arg_parser.h"
+#include "../../include/blink_core/arg_parser.h"
 
-bool parse_args( int argc, const char** argv ) {
+bool arg_parser( int argc, const char** argv ) {
     // Нет аргументов — идём в цикл
     if ( argc <= 1 ) return true;
 

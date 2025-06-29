@@ -10,7 +10,7 @@
 #include <algorithm> // Для сортировки внутри вектора
 
 // Перечисление для типов сообщений
-enum class LogLevel {
+enum class log_level {
     INFO,
     WARNING,
     ERROR,
@@ -19,10 +19,10 @@ enum class LogLevel {
     TRACE,
 };
 
-namespace Logger {
+namespace blink_logger {
     void cleanup_logs( int max_logs = 7 );
     std::string get_current_time();
-    void log( const std::string& message, LogLevel level = LogLevel::INFO );
+    void log( const std::string& message, log_level level = log_level::INFO );
     void init();
     void shutdown();
 }
