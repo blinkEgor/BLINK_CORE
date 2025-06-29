@@ -2,15 +2,6 @@
 
 static std::unordered_map< std::string, std::string > config_map;
 
-// ### Функция принимает параметр адреса, где находится конфиг, и имеет значение по умолчанию для core.conf
-// Выполняет действия: 
-// - Читает файл по заданному адресу
-// - Проверяет пустую строку или комментарий
-// - Парьсит строку
-// - - Извлекает ключь до первого пробела
-// - - Извлекает символ "="
-// - - Извлекает остаток строки как значение
-// - - Отсекает у значения пробелы спереди и в конце
 bool blink_config::load( const std::string& path ) {
     std::ifstream file( path );
 
@@ -21,40 +12,50 @@ bool blink_config::load( const std::string& path ) {
         return false;
     }
 
+    std::string current_key;
+    std::string current_value;
+
     std::string line;
     while ( std::getline( file, line ) ) {
         if ( line.empty() || line[0] == '#' ) continue;
+
+        if ( !current_key.empty() && ( line[0] == ' ' || line[0] == '\t' ) ) {
+            current_value += "\n" + line;
+            continue;
+        }
+
+        if ( !current_key.empty() ) {
+            config_map[ current_key ] = current_value;
+        }
 
         std::istringstream iss( line );
         std::string key, eq, value;
 
         if ( !( iss >> key >> eq ) ) continue;
-
         std::getline( iss, value );
+
         value.erase( 0, value.find_first_not_of( " \t" ) );
         value.erase( value.find_last_not_of( " \t" ) + 1 );
 
         if ( eq != "=" ) continue;
 
-        config_map[ key ] = value;
+        current_key = key;
+        current_value = value;
+
+    }
+
+    if ( !current_key.empty() ) {
+        config_map[ current_key ] = current_value;
     }
     
     return true;
 }
 
-// ### Функция принимает параметр ключа и значение для ключа по умолчанию
-// Выполняет действия: 
-// - Ищит в словаре ключей и значений нужный заданный параметром ключ и возвращает значение
-// - Если ключ не найден, то вернёт значение по умолчанию
 std::string blink_config::get( const std::string& key, const std::string& fallback ) {
     if ( config_map.find( key ) != config_map.end() ) return config_map[ key ];
     return fallback;
 }
 
-// ### Функция не принимает и не возвращает значения
-// Выполняет действия: 
-// - Печатает сообщение о том что будет напечатано содержимое конфига
-// - Построчно печатает содержимое конфига
 void blink_config::print() {
     // !!! Заменить на систему ввода/вывода CLI
     std::cout << "[CONFIG]:\n";
@@ -64,9 +65,6 @@ void blink_config::print() {
     }
 }
 
-// ### Функция инициализации системы конфигураций на уровне ЯДРА
-// 1. Загрузка конфигурационного файла
-// 2. Сообщение инициализации конфиг-системы
 void blink_config::init() {
     blink_config::load();
     blink_logger::log( blink_config::get( "config_init_message" ), log_level::INFO );

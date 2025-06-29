@@ -1,16 +1,10 @@
 #include "../../include/blink_core/logger.h"
 
-// ### функция для удаления устаревших логов
-// - Кэширование пространства имён "std::filesystem" в псевдониме "fs"
-// - Создание временного списка всех файлов логов в директории "logs"
-// - - Сканируется только "logs/"
-// - - В список попадают только обычные файлы с расширением ".txt"
-// - Сортировка списка по времени последнего изменения
-// - - Сначала идут новые файлы ( новее = выше )
-// - Удаление всех логов, начиная с позиции "max_logs"
-// - - Пример: если файлов 10, а max_logs = 7 → удалятся последние 3
-// - - Удаление происходит через "fs::remove()"
 void blink_logger::cleanup_logs( int max_logs ) {
+    if ( max_logs <= 0 ) {
+        max_logs = 7;
+    }
+
     namespace fs = std::filesystem;
     std::vector<fs::directory_entry> logs;
 
@@ -29,12 +23,6 @@ void blink_logger::cleanup_logs( int max_logs ) {
     }
 }
 
-// ### Функция для получения текущего времени в формате "гггг-мм-дд чч:мм:сс"
-// - Получение текущего времени
-// - Преобразование в time_t (время в секундах)
-// - Преобразование в структуру tm ( для форматирования )
-// - Использование stringstream для форматирования
-// - Возвращаемый формат: "гггг-мм-дд чч:мм:сс"
 std::string blink_logger::get_current_time() {
     auto now = std::chrono::system_clock::now();
     std::time_t now_time_t = std::chrono::system_clock::to_time_t( now );
@@ -44,15 +32,6 @@ std::string blink_logger::get_current_time() {
     return ss.str();
 }
 
-// ### Функция для логирования по уровням в файл и cli
-// - Получение текущего времени ( get_current_time() )
-// - Определение префикса в зависимости от уровня логирования
-// - Создание директории логов, если её нет
-// - Создание имени файла, с сортировкой по дням
-// - Открытие файла для записи ( добавление новых строк в конец файла )
-// - Записывание сообщения в файл
-// - - Вывод ошибки в cli, при невозможности открыть файл лога
-// - Вывод сообщения в cli
 void blink_logger::log( const std::string& message, log_level level ) {
     std::string time_str = get_current_time();
     std::string level_str;
@@ -80,10 +59,6 @@ void blink_logger::log( const std::string& message, log_level level ) {
     std::cerr << "[" << time_str << "] " << level_str << message << std::endl;
 }
 
-// ### Функция инициализации системы логирования на уровне ЯДРА
-// 1. Создать папку logs, если её нет
-// 2. Очистить старые логи
-// 3. Лог: начало новой сессии
 void blink_logger::init() {
     if ( !std::filesystem::exists( "logs" ) ) {
         std::filesystem::create_directory( "logs" );
@@ -92,7 +67,6 @@ void blink_logger::init() {
     log( "blink_logger initialized", log_level::INFO );
 }
 
-// ### Простая функция задача которой во время логирования в конце сессии добавить отступ
 void blink_logger::shutdown() {
     std::ofstream log_file( "logs/log_" + get_current_time().substr( 0, 10 ) + ".txt", std::ios::app );
     if ( log_file.is_open() ) {

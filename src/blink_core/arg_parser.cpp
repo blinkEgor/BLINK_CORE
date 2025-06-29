@@ -1,17 +1,8 @@
 #include "../../include/blink_core/arg_parser.h"
 
 bool arg_parser( int argc, const char** argv ) {
-    // Нет аргументов — идём в цикл
     if ( argc <= 1 ) return true;
 
-    // Временные переменные, будут заменены данными из конфига и вшитыми параметрами версий
-    const std::string version = "1.0";
-    const std::string stage = "-alpha";
-    
-    const std::string help_message = "Hellp message: \n --version / -v   Show programm version [v]-[NUMBER]-[STAGE]";
-    // -----------------------------------------------------------------------------------
-
-    // Тут проходит пересчёт аргументов и вызываются соответствующие команды или задаются настройки
     if ( argc > 1 ) {
         // Начинаю цикл с 1 потому что 0 - это имя программы.
         // Цикл гарантирует что каждый введенный аргумент будет просмотрен программой
@@ -19,11 +10,13 @@ bool arg_parser( int argc, const char** argv ) {
             std::string option = argv[ arg ];
 
             if ( option == "--help" || option == "-h" ) {
-                std::cout << help_message << std::endl;
+                std::cout << blink_config::get( "help_message" ) << std::endl;
+                blink_logger::log( "Print help message: " + blink_config::get( "help_message" ), log_level::TRACE );
             }
 
             else if ( option == "--version" || option == "-v" ) {
-                std::cout << "v-" << version << stage << std::endl; 
+                std::cout << blink_config::get( "version" ) << std::endl;
+                blink_logger::log( "Version: " + blink_config::get( "version" ), log_level::TRACE );
             }
 
             else {
@@ -32,6 +25,5 @@ bool arg_parser( int argc, const char** argv ) {
         }
     }
 
-    // Выход полсе перебора всех аргументов
     return true;
 }
