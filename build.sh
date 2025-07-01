@@ -5,8 +5,8 @@
 # ----------------------------------------
 
 # Параметры по умолчанию
-BUILD_TYPE="Debug" # Тип сборки ( Debug/Release )
 BINARY_NAME="core" # Имя бинарника
+BUILD_TYPE="Debug" # Тип сборки ( Debug/Release )
 
 TARGET_OS="linux" # Сборка под Linux
 
@@ -15,10 +15,10 @@ ENABLE_SDL2="OFF" # Подключить SDL
 
 # Аргументы из командной строки ( если переданы )
 if [ ! -z "$1" ]; then
-  BUILD_TYPE=$1
+  BINARY_NAME=$1
 fi
 if [ ! -z "$2" ]; then
-  BINARY_NAME=$2
+  BUILD_TYPE=$2
 fi
 if [ ! -z "$3" ]; then
   TARGET_OS=$3

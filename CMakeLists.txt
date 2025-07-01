@@ -1,7 +1,7 @@
 # Этот строка говорит CMake, что для сборки нужна не менее чем 3.16-я версия CMake.
 cmake_minimum_required(VERSION 3.16)
 
-# Это объявляет проект ECS_CORE
+# Это объявляет проект BLINK_CORE
 # VERSION 0.1 — это назначенная точка разработки
 # LANGUAGES CXX — проект на C++
 project(BLINK_CORE VERSION 0.1 LANGUAGES CXX)
@@ -40,14 +40,15 @@ if (ENABLE_SDL2)
 endif()
 
 # Файлы с исходниками ядра
-file(GLOB_RECURSE ECS_CORE_SRC
+file(GLOB_RECURSE BLINK_CORE_SRC
     ${SRC_DIR}/blink_core/*.cpp
 )
 
 # Сборка бинарника
 add_executable(${BINARY_NAME}
     ${SRC_DIR}/main.cpp
-    ${ECS_CORE_SRC}
+    ${SRC_DIR}/main_loop.cpp
+    ${BLINK_CORE_SRC}
 )
 
 # Где будет оказываться готовый бинарник

@@ -4,6 +4,7 @@
 #include <fstream> // Чтение файлов
 #include <sstream> // Парсинг строк
 #include "logger.h"
+#include "cli_io.h"
 
 namespace blink_config {
     // ### Загружает конфигурацию из указанного файла.

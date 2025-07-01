@@ -67,4 +67,7 @@ namespace blink_logger {
     // Используется:
     // - для визуального отделения логов разных сессий.
     void shutdown();
+
+    
+    void configure( bool enable_cli, bool enable_debug );
 }

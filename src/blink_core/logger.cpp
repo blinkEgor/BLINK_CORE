@@ -1,5 +1,8 @@
 #include "../../include/blink_core/logger.h"
 
+static bool cli_enabled = true;
+static bool debug_enabled = true;
+
 void blink_logger::cleanup_logs( int max_logs ) {
     if ( max_logs <= 0 ) {
         max_logs = 7;
@@ -33,8 +36,13 @@ std::string blink_logger::get_current_time() {
 }
 
 void blink_logger::log( const std::string& message, log_level level ) {
+    if ( !debug_enabled && ( level == log_level::DEBUG || level == log_level::TRACE ) ) {
+        return;
+    }
+
     std::string time_str = get_current_time();
     std::string level_str;
+
     switch ( level ) {
         case log_level::INFO: level_str = "[INFO] "; break;
         case log_level::WARNING: level_str = "[WARNING] "; break;
@@ -50,13 +58,13 @@ void blink_logger::log( const std::string& message, log_level level ) {
     std::string date_str = blink_logger::get_current_time().substr( 0, 10 );
     std::string filename = "logs/log_" + date_str + ".txt";
     std::ofstream log_file( filename, std::ios::app );
-    if( log_file.is_open() ) {
+    if ( log_file.is_open() ) {
         log_file << "[" << time_str << "] " << level_str << message << std::endl;
         log_file.close();
-    } else {
-        std::cerr << "[" << time_str << "] " << "[ERROR] Failed to open log file!" << std::endl;
     }
-    std::cerr << "[" << time_str << "] " << level_str << message << std::endl;
+    if ( cli_enabled ) {
+        std::cerr << "[" << time_str << "] " << level_str << message << std::endl;
+    }
 }
 
 void blink_logger::init() {
@@ -74,4 +82,9 @@ void blink_logger::shutdown() {
         log_file.close();
     }
     std::cerr << std::endl;
+}
+
+void blink_logger::configure( bool enable_cli, bool enable_debug ) {
+    cli_enabled = enable_cli;
+    debug_enabled = enable_debug;
 }

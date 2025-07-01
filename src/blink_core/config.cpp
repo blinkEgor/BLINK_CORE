@@ -3,6 +3,7 @@
 static std::unordered_map< std::string, std::string > config_map;
 
 bool blink_config::load( const std::string& path ) {
+    blink_logger::log( "Loading config from: " + path, log_level::DEBUG );
     std::ifstream file( path );
 
     if ( !file.is_open() ) {
@@ -21,11 +22,13 @@ bool blink_config::load( const std::string& path ) {
 
         if ( !current_key.empty() && ( line[0] == ' ' || line[0] == '\t' ) ) {
             current_value += "\n" + line;
+            blink_logger::log( "Appended multiline to [" + current_key + "]: " + line, log_level::TRACE );
             continue;
         }
 
         if ( !current_key.empty() ) {
             config_map[ current_key ] = current_value;
+            blink_logger::log( "Parsed config [" + current_key + "] = " + current_value, log_level::TRACE );
         }
 
         std::istringstream iss( line );
@@ -39,6 +42,7 @@ bool blink_config::load( const std::string& path ) {
 
         if ( eq != "=" ) continue;
 
+        blink_logger::log( "Found config key: " + key, log_level::DEBUG );
         current_key = key;
         current_value = value;
 
@@ -52,20 +56,31 @@ bool blink_config::load( const std::string& path ) {
 }
 
 std::string blink_config::get( const std::string& key, const std::string& fallback ) {
-    if ( config_map.find( key ) != config_map.end() ) return config_map[ key ];
+    if ( config_map.find( key ) != config_map.end() ) {
+        blink_logger::log( "Get [" + key + "] = " + config_map[ key ], log_level::TRACE );
+        return config_map[ key ];
+    }
+    blink_logger::log( "Get fallback for [" + key + "] = " + fallback, log_level::TRACE );
     return fallback;
 }
 
 void blink_config::print() {
-    // !!! Заменить на систему ввода/вывода CLI
-    std::cout << "[CONFIG]:\n";
+    blink_cli::output( "[CONFIG]:" );
     for ( const auto& [ key, value ] : config_map ) {
-        // !!! Заменить на систему ввода/вывода CLI
-        std::cout << " " << key << " = " << value << std::endl; 
+        blink_cli::output( " " + key + " = " + value );
     }
 }
 
 void blink_config::init() {
-    blink_config::load();
-    blink_logger::log( blink_config::get( "config_init_message" ), log_level::INFO );
+    blink_logger::log( "Initializing config system...", log_level::DEBUG );
+    if ( blink_config::load() ) {
+        blink_logger::log( blink_config::get( "config_init_message" ), log_level::INFO );
+
+        bool cli_logging = blink_config::get( "cli_logging", "ON" ) == "ON";
+        bool debug_logging = blink_config::get( "debug_logging", "ON" ) == "ON";
+
+        blink_logger::configure( cli_logging, debug_logging );
+    } else {
+        blink_logger::log( "Config load failed in init()", log_level::WARNING );
+    }
 }
