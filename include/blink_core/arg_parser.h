@@ -1,8 +1,8 @@
 #pragma once
-#include <iostream> // !! Заменить на систему логов и cli
 #include <string>
 #include "logger.h"
 #include "config.h"
+#include "cli_io.h"
 
 // ### Обрабатывает аргументы командной строки
 //

@@ -22,7 +22,6 @@ bool blink_config::load( const std::string& path ) {
 
         if ( !current_key.empty() && ( line[0] == ' ' || line[0] == '\t' ) ) {
             current_value += "\n" + line;
-            blink_logger::log( "Appended multiline to [" + current_key + "]: " + line, log_level::TRACE );
             continue;
         }
 
@@ -30,26 +29,26 @@ bool blink_config::load( const std::string& path ) {
             config_map[ current_key ] = current_value;
             blink_logger::log( "Parsed config [" + current_key + "] = " + current_value, log_level::TRACE );
         }
-
+        
         std::istringstream iss( line );
         std::string key, eq, value;
-
+        
         if ( !( iss >> key >> eq ) ) continue;
         std::getline( iss, value );
-
+        
         value.erase( 0, value.find_first_not_of( " \t" ) );
         value.erase( value.find_last_not_of( " \t" ) + 1 );
-
+        
         if ( eq != "=" ) continue;
-
+        
         blink_logger::log( "Found config key: " + key, log_level::DEBUG );
         current_key = key;
         current_value = value;
-
     }
-
+    
     if ( !current_key.empty() ) {
         config_map[ current_key ] = current_value;
+        blink_logger::log( "Parsed config [" + current_key + "] = " + current_value, log_level::TRACE );
     }
     
     return true;

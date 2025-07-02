@@ -1,22 +1,25 @@
 #include "../../include/blink_core/arg_parser.h"
 
 bool arg_parser( int argc, const char** argv ) {
-    if ( argc <= 1 ) return true;
+    blink_logger::log( "arg_parser is working...", log_level::DEBUG );
+    if ( argc <= 1 ) {
+        blink_logger::log( "No arguments passed", log_level::DEBUG );
+        blink_logger::log( "arg_parser is closing", log_level::DEBUG );
+        return true;
+    }
 
     if ( argc > 1 ) {
-        // Начинаю цикл с 1 потому что 0 - это имя программы.
-        // Цикл гарантирует что каждый введенный аргумент будет просмотрен программой
+        blink_logger::log( std::to_string( argc - 1 ) + " arguments submitted", log_level::DEBUG );
         for ( int arg = 1; arg < argc; arg++ ) {
             std::string option = argv[ arg ];
+            blink_logger::log( std::to_string( arg ) + " argument is " + option, log_level::TRACE );
 
             if ( option == "--help" || option == "-h" ) {
-                std::cout << blink_config::get( "help_message" ) << std::endl;
-                blink_logger::log( "Print help message: " + blink_config::get( "help_message" ), log_level::TRACE );
+                blink_cli::output( blink_config::get( "help_message" ) );
             }
 
             else if ( option == "--version" || option == "-v" ) {
-                std::cout << blink_config::get( "version" ) << std::endl;
-                blink_logger::log( "Version: " + blink_config::get( "version" ), log_level::TRACE );
+                blink_cli::output( blink_config::get( "version" ) );
             }
 
             else {
@@ -25,5 +28,7 @@ bool arg_parser( int argc, const char** argv ) {
         }
     }
 
+    blink_logger::log( "Arguments parsed successfully", log_level::INFO );
+    blink_logger::log( "arg_parser is closing", log_level::DEBUG );
     return true;
 }

@@ -1,6 +1,6 @@
 #include "../../include/blink_core/logger.h"
 
-static bool cli_enabled = true;
+static bool cli_enabled = false;
 static bool debug_enabled = true;
 
 void blink_logger::cleanup_logs( int max_logs ) {
