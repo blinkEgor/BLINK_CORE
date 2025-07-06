@@ -19,8 +19,26 @@ bool arg_parser( int argc, const char** argv ) {
             }
 
             else if ( option == "--version" || option == "-v" ) {
-                blink_cli::output( blink_config::get( "version" ) );
+                blink_cli::output( "Version: " + blink_config::get( "version" ) );
             }
+
+            else if ( option == "--core-version" || option == "-core-v" ) {
+                blink_cli::output( "Core version: " + blink_config::get( "blink_core_version" ) + "   From https://github.com/blinkEgor/BLINK_CORE" );
+            }
+
+            else if ( option == "--api-version" || option == "-api-v" ) {
+                blink_cli::output( "API version: " + blink_config::get( "blink_api_version" ) + "   From https://github.com/blinkEgor/" );
+            }
+
+
+            else if ( option == "--cli-logging" || option == "-cli" ) {
+                blink_cli::output( "Status of CLI logging: " + blink_config::get( "cli_logging" ) );
+            }
+
+            else if ( option == "--debug-logging" || option == "-debug" ) {
+                blink_cli::output( "Status of debugging: " + blink_config::get( "debug_logging" ) );
+            }
+
 
             else {
                 std::cout << "Unknown argument: " << option << "\nPlease write --help , to check available argument" << std::endl;
