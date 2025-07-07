@@ -30,28 +30,28 @@ bool blink_config::load( const std::string& path ) {
             config_map[ current_key ] = current_value;
             blink_logger::log( "Parsed config [" + current_key + "] = " + current_value, log_level::TRACE );
         }
-        
+
         std::istringstream iss( line );
         std::string key, eq, value;
-        
+
         if ( !( iss >> key >> eq ) ) continue;
         std::getline( iss, value );
-        
+
         value.erase( 0, value.find_first_not_of( " \t" ) );
         value.erase( value.find_last_not_of( " \t" ) + 1 );
-        
+
         if ( eq != "=" ) continue;
-        
+
         blink_logger::log( "Found config key: " + key, log_level::DEBUG );
         current_key = key;
         current_value = value;
     }
-    
+
     if ( !current_key.empty() ) {
         config_map[ current_key ] = current_value;
         blink_logger::log( "Parsed config [" + current_key + "] = " + current_value, log_level::TRACE );
     }
-    
+
     return true;
 }
 
@@ -102,6 +102,58 @@ bool blink_config::set( const std::string& key, const std::string& value ) {
     return false;
 }
 
-bool blink_config::save( const std::string& path = "configs/core.conf" ) {
+bool blink_config::save( const std::string& path ) {
+    if ( dirty_keys.empty() ) {
+        blink_logger::log( "No changes to save", log_level::DEBUG );
+        return true;
+    }
 
+    blink_logger::log( "Saving config in: " + path, log_level::DEBUG );
+    std::ifstream in_file( path );
+
+    if ( !in_file.is_open() ) {
+        blink_logger::log( "Failed to open config for reading: " + path, log_level::ERROR );
+        // НА БУДУЩЕЕ, ТУТ СОЗДАТЬ КОНФИГ С ДЕФОЛТНЫМИ ОПЦИЯМИ И ЗНАЧЕНИЯМИ
+        // ТОГДА НЕ ПРИДЕТСЯ ВОЗВРАЩАТЬ И МОЖНО ЗАМЕНИТЬ НА WARNING
+        return false;
+    }
+
+    std::vector< std::string > lines;
+    std::string line;
+    while ( std::getline( in_file, line ) ) {
+        lines.push_back( line );
+    }
+    in_file.close();
+
+    std::string current_key;
+    for( auto& line : lines ) {
+        if ( line.empty() || line[0] == '#' ) continue;
+
+        std::istringstream iss( line );
+        std::string key, eq;
+        if ( iss >> key >> eq && eq == "=" ) {
+            current_key = key;
+            if ( dirty_keys.count( key ) ) {
+                line = key + " = " + config_map[ key ];
+                dirty_keys.erase( key );
+                blink_logger::log( "Saved new [key = value]: " + line, log_level::TRACE );
+            }
+        }
+    }
+
+    std::ofstream out_file( path );
+    if ( !out_file.is_open() ) {
+        blink_logger::log( "Failed to open config for writing: " + path, log_level::ERROR );
+        // НА БУДУЩЕЕ, ТУТ СОЗДАТЬ КОНФИГ С ДЕФОЛТНЫМИ ОПЦИЯМИ И ЗНАЧЕНИЯМИ
+        // ТОГДА НЕ ПРИДЕТСЯ ВОЗВРАЩАТЬ И МОЖНО ЗАМЕНИТЬ НА WARNING
+        return false;
+    }
+
+    for ( const auto& line : lines ) {
+        out_file << line << "\n";
+    }
+    out_file.close();
+
+    blink_logger::log( "Config saved to: " + path, log_level::INFO );
+    return true;
 }
