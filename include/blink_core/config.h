@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <fstream> // Чтение файлов
 #include <sstream> // Парсинг строк
 #include "logger.h"
@@ -41,4 +42,10 @@ namespace blink_config {
     // 1. Загрузка конфигурационного файла.
     // 2. Вывод сообщения о запуске конфигурации.
     void init();
+
+
+    bool set( const std::string& key, const std::string& value = "" );
+
+
+    bool save( const std::string& path = "configs/core.conf" );
 }

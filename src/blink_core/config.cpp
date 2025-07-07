@@ -1,6 +1,7 @@
 #include "../../include/blink_core/config.h"
 
 static std::unordered_map< std::string, std::string > config_map;
+static std::unordered_set< std::string > dirty_keys;
 
 bool blink_config::load( const std::string& path ) {
     blink_logger::log( "Loading config from: " + path, log_level::DEBUG );
@@ -82,4 +83,25 @@ void blink_config::init() {
     } else {
         blink_logger::log( "Config load failed in init()", log_level::WARNING );
     }
+}
+
+bool blink_config::set( const std::string& key, const std::string& value ) {
+    if ( key.empty() ) {
+        blink_logger::log( "Empty key provided", log_level::ERROR );
+        return false;
+    }
+
+    if ( config_map.find( key ) != config_map.end() ) {
+        config_map[ key ] = value;
+        dirty_keys.insert( key );
+        blink_logger::log( "Set [" + key + "] = " + config_map[ key ], log_level::TRACE );
+        return true;
+    }
+
+    blink_logger::log( "Key [" + key + "] is not found!", log_level::ERROR );
+    return false;
+}
+
+bool blink_config::save( const std::string& path = "configs/core.conf" ) {
+
 }
