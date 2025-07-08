@@ -11,7 +11,7 @@ namespace blink_cli {
     // - Возвращает результат в виде строки
     // - В будущем может быть расширена для:
     //   - Диалоговых шаблонов
-    std::string input();
+    std::string input( std::string action_message = "" );
 
     // ### Функция для вывода строки в CLI (терминал)
     //

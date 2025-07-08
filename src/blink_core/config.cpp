@@ -65,9 +65,9 @@ std::string blink_config::get( const std::string& key, const std::string& fallba
 }
 
 void blink_config::print() {
-    blink_cli::output( "[CONFIG]:" );
+    blink_cli::output( "[CONFIG]:\n" );
     for ( const auto& [ key, value ] : config_map ) {
-        blink_cli::output( " " + key + " = " + value );
+        blink_cli::output( " " + key + " = " + value + "\n" );
     }
 }
 

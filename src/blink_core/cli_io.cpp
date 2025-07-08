@@ -1,6 +1,7 @@
 #include "../../include/blink_core/cli_io.h"
 
-std::string blink_cli::input() {
+std::string blink_cli::input( std::string action_message ) {
+    std::cout << action_message;
     std::string input;
     if ( !( std::cin >> input ) ) {
         blink_logger::log( "Failed to read input (stream error)", log_level::WARNING );
@@ -8,6 +9,7 @@ std::string blink_cli::input() {
         std::cin.ignore( std::numeric_limits<std::streamsize>::max(), '\n' );
         return "";
     }
+    blink_logger::log( "Action message is: " + action_message, log_level::TRACE );
     blink_logger::log( "Input is: " + input, log_level::TRACE );
     return input;
 };
