@@ -1,7 +1,5 @@
 #include "../../include/blink_core/config.h"
 
-static std::string version = "1.0.0-alpha";
-
 static std::unordered_map< std::string, std::string > config_map;
 static std::unordered_set< std::string > dirty_keys;
 
@@ -82,8 +80,13 @@ void blink_config::init() {
         bool debug_logging = blink_config::get( "debug_logging", "ON" ) == "ON";
         blink_logger::configure( cli_logging, debug_logging );
 
-        blink_config::set( "blink_core_version", version );
-        blink_config::save();
+        if ( blink_config::load( "README_CORE.md" ) ) {
+            blink_logger::log( "README_CORE was readed", log_level::INFO );
+            blink_config::set( "blink_core_version", blink_config::get( "blink_core_version" ) );
+            blink_config::save();
+        } else {
+            blink_logger::log( "README_CORE load failed in init()", log_level::WARNING );
+        }
     } else {
         blink_logger::log( "Config load failed in init()", log_level::WARNING );
     }
