@@ -1,5 +1,7 @@
 #include "../../include/blink_core/config.h"
 
+static std::string version = "1.0.0-alpha";
+
 static std::unordered_map< std::string, std::string > config_map;
 static std::unordered_set< std::string > dirty_keys;
 
@@ -78,8 +80,10 @@ void blink_config::init() {
 
         bool cli_logging = blink_config::get( "cli_logging", "ON" ) == "ON";
         bool debug_logging = blink_config::get( "debug_logging", "ON" ) == "ON";
-
         blink_logger::configure( cli_logging, debug_logging );
+
+        blink_config::set( "blink_core_version", version );
+        blink_config::save();
     } else {
         blink_logger::log( "Config load failed in init()", log_level::WARNING );
     }

@@ -39,22 +39,31 @@ if (ENABLE_SDL2)
     add_definitions(-DENABLE_SDL2)
 endif()
 
+# Имя для библиотеки
+set(LIB_NAME "blink_core")
+
 # Файлы с исходниками ядра
 file(GLOB_RECURSE BLINK_CORE_SRC
-    ${SRC_DIR}/blink_core/*.cpp
+    ${SRC_DIR}/${LIB_NAME}/*.cpp
 )
 
-# Сборка бинарника
-add_executable(${BINARY_NAME}
-    ${SRC_DIR}/main.cpp
-    ${SRC_DIR}/main_loop.cpp
+# Сборка библиотеки ядра
+add_library(${LIB_NAME} SHARED 
     ${BLINK_CORE_SRC}
 )
 
+# Сборка исполняемого бинарника
+add_executable(${BINARY_NAME}
+    ${SRC_DIR}/main.cpp
+    ${SRC_DIR}/main_loop.cpp
+)
+target_link_libraries(${BINARY_NAME} ${LIB_NAME})
+
 # Где будет оказываться готовый бинарник
 set(OUTPUT_BIN_DIR "${CMAKE_SOURCE_DIR}/bin")
-set_target_properties(${BINARY_NAME} PROPERTIES
+set_target_properties(${BINARY_NAME} ${LIB_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_BIN_DIR}
+    LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_BIN_DIR}
 )
 
 # Выбор ОС под которую будет создан бинарник
