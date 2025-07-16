@@ -29,12 +29,15 @@ bool blink_config::load( const std::string& path ) {
         if ( !current_key.empty() ) {
             config_map[ current_key ] = current_value;
             blink_logger::log( "Parsed config [" + current_key + "] = " + current_value, log_level::TRACE );
+            current_key = "";
+            current_value = "";
         }
 
         std::istringstream iss( line );
         std::string key, eq, value;
-
+        
         if ( !( iss >> key >> eq ) ) continue;
+
         std::getline( iss, value );
 
         value.erase( 0, value.find_first_not_of( " \t" ) );
@@ -50,6 +53,8 @@ bool blink_config::load( const std::string& path ) {
     if ( !current_key.empty() ) {
         config_map[ current_key ] = current_value;
         blink_logger::log( "Parsed config [" + current_key + "] = " + current_value, log_level::TRACE );
+        current_key = "";
+        current_value = "";
     }
 
     return true;

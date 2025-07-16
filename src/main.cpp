@@ -2,6 +2,7 @@
 #include "../include/blink_core/arg_parser.h"
 #include "../include/blink_core/config.h"
 #include "../include/blink_core/logger.h"
+#include "../include/main_loop.h"
 
 int main( int argc, const char** argv ) {
     // === ИНИЦИАЛИЗАЦИЯ ЯДРА ===
@@ -24,7 +25,11 @@ int main( int argc, const char** argv ) {
 
     // === ГЛАВНЫЙ ЦИКЛ ===
 
-    // ПОКА ЧТО НЕ СУЩЕСТВУЕТ
+    if ( true ) {
+        if ( main_loop::loop() ) {
+            blink_logger::log( "Main loop was closed", log_level::INFO );
+        }
+    }
 
     // === ВЫХОД ИЗ ПРОГРАММЫ ===
 

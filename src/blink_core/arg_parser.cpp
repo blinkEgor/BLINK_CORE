@@ -22,7 +22,7 @@ bool arg_parser( int argc, const char** argv ) {
                 blink_cli::output( "Version: " + blink_config::get( "version" ) );
             }
             else if ( option == "--core-version" || option == "-core-v" ) {
-                blink_cli::output( "Core version: " + blink_config::get( "blink_core_version" ) + "   From https://github.com/blinkEgor/BLINK_CORE" );
+                blink_cli::output( "Core version: " + blink_config::get( "blink_core_version" ) + "   From https://github.com/blinkEgor/BLINK_CORE/releases" );
             }
             else if ( option == "--api-version" || option == "-api-v" ) {
                 blink_cli::output( "API version: " + blink_config::get( "blink_api_version" ) + "   From https://github.com/blinkEgor/" );
