@@ -25,10 +25,14 @@ int main( int argc, const char** argv ) {
 
     // === ГЛАВНЫЙ ЦИКЛ ===
 
-    if ( true ) {
+    std::string connect_loop = blink_config::get( "connect_loop", "OFF" );
+    bool is_connect_loop = connect_loop == "ON";
+    if ( is_connect_loop ) {
         if ( main_loop::loop() ) {
             blink_logger::log( "Main loop was closed", log_level::INFO );
         }
+    } else {
+        blink_logger::log( "Connecting loop was <" + std::string( is_connect_loop ? "true" : "false" ) + ">, bacaus connect_loop was <" + connect_loop, log_level::DEBUG );
     }
 
     // === ВЫХОД ИЗ ПРОГРАММЫ ===

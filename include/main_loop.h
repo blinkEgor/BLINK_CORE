@@ -1,5 +1,6 @@
 #pragma once
 #include "../include/blink_core/logger.h"
+#include "../include/blink_core/config.h"
 
 namespace main_loop {
     extern int max_i;
