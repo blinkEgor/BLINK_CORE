@@ -28,15 +28,21 @@ bool arg_parser( int argc, const char** argv ) {
                 blink_cli::output( "API version: " + blink_config::get( "blink_api_version" ) + "   From https://github.com/blinkEgor/" );
             }
 
-            // Показать значение ключа
+            // ПОКАЗАТЬ значение ключа
             else if ( option == "--cli-logging" || option == "-cli" ) {
                 blink_cli::output( "Status of CLI logging: " + blink_config::get( "cli_logging" ) );
             }
             else if ( option == "--debug-logging" || option == "-debug" ) {
                 blink_cli::output( "Status of debugging: " + blink_config::get( "debug_logging" ) );
             }
+            else if ( option == "--connect-loop-status" ) {
+                blink_cli::output( "Connaction status of loop: " + blink_config::get( "connect_loop" ) );
+            }
+            else if ( option == "--main-loop-status" ) {
+                blink_cli::output( "Status of <main_loop>: " + blink_config::get( "main_loop" ) );
+            }
 
-            // Изменить значения
+            // ИЗМЕНИТЬ значения ключа
             else if ( option == "--set-cli-logging" ) {
                 std::string value = blink_cli::input( "Enter new value for cli_logging (ON/OFF): " );
                 if ( value == "ON" || value == "OFF" ) {
@@ -63,6 +69,22 @@ bool arg_parser( int argc, const char** argv ) {
                     blink_logger::configure( cli_logging, debug_logging );
                 } else {
                     blink_logger::log( "Invalid value. Use ON/OFF", log_level::WARNING );
+                }
+            }
+            else if ( option == "--set-connect-loop" ) {
+                std::string value = blink_cli::input( "Enter new value for connect_loop (ON/OFF): ");
+                if ( value == "ON" || value == "OFF" ) {
+                    blink_config::set( "connect_loop", value );
+                } else {
+                    blink_logger::log( "Invalid value. Use ON/OFF", log_level::WARNING );
+                }
+            }
+            else if ( option == "--set-main-loop" ) {
+                std::string value = blink_cli::input( "Enter new value for main_loop (start/stop): ");
+                if ( value == "start" || value == "stop" ) {
+                    blink_config::set( "main_loop", value );
+                } else {
+                    blink_logger::log( "Invalid value. Use start/stop", log_level::WARNING );
                 }
             }
 
