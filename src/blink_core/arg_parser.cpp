@@ -88,6 +88,11 @@ bool arg_parser( int argc, const char** argv ) {
                 }
             }
 
+            // DO ACTION
+            else if ( option == "--save-core" ) {
+                blink_config::save();
+            }
+
             else {
                 blink_cli::output( "Unknown argument: " + option );
                 blink_cli::output( "Please write --help , to check available argument" );
