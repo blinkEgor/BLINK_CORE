@@ -13,6 +13,7 @@
 
 EXECUTABLE_BIN="core"
 LIBRARY_BIN="libblink_core.so"
+ZIP_NAME="BLINK_CORE"
 
 DIST_DIR="dist"
 BIN_DIR="bin"
@@ -31,6 +32,9 @@ if [ ! -z "$1" ]; then
 fi
 if [ ! -z "$2" ]; then
     LIBRARY_BIN=$2
+fi
+if [ ! -z "$3" ]; then
+    ZIP_NAME=$3
 fi
 
 # ===================
@@ -108,7 +112,7 @@ fi
 echo "=== Creating an archive ==="
 
 cd "$DIST_DIR" || exit 1
-zip -r "BLINK_CORE.zip" ./* > /dev/null && echo "[OK] Archive created: BLINK_CORE.zip" || echo "[ERROR] Failed to create archive"
+zip -r "$ZIP_NAME.zip" ./* > /dev/null && echo "[OK] Archive created: BLINK_CORE.zip" || echo "[ERROR] Failed to create archive"
 cd ..
 
 # === ИТОГ ===
