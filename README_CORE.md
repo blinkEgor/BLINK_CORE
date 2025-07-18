@@ -1,7 +1,7 @@
 # BLINK_CORE (ядро)
 
 **Версия:**
-blink_core_version = 1.1.1-alpha
+blink_core_version = 1.5.0-alpha
 **Назначение:** База для модульного движка.
 
 ## Изменения
