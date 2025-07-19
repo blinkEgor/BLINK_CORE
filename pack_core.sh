@@ -12,8 +12,9 @@
 # === ПАРАМЕТРЫ ===
 
 EXECUTABLE_BIN="core"
-LIBRARY_BIN="libblink_core.so"
 ZIP_NAME="BLINK_CORE"
+
+LIBRARY_BIN="libblink_core.so"
 
 DIST_DIR="dist"
 BIN_DIR="bin"
@@ -31,10 +32,7 @@ if [ ! -z "$1" ]; then
     EXECUTABLE_BIN=$1
 fi
 if [ ! -z "$2" ]; then
-    LIBRARY_BIN=$2
-fi
-if [ ! -z "$3" ]; then
-    ZIP_NAME=$3
+    ZIP_NAME=$2
 fi
 
 # ===================
