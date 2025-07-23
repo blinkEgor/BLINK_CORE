@@ -57,11 +57,13 @@ check_file "$INCLUDE_DIR/$INCLUDE_BLINK_CORE_DIR" || exit 1
 # ===================
 
 # === СОЗДАНИЕ ===
-echo "=== Creating a structure in $DIST_DIR ==="
+echo "=== Creating a structure in $DIST_DIR/$ZIP_NAME ==="
 
-mkdir -p $DIST_DIR/$BIN_DIR
-mkdir -p $DIST_DIR/$CONFIG_DIR
-mkdir -p $DIST_DIR/$INCLUDE_DIR/$INCLUDE_BLINK_CORE_DIR
+mkdir -p $DIST_DIR/$ZIP_NAME/$BIN_DIR
+mkdir -p $DIST_DIR/$ZIP_NAME/$CONFIG_DIR
+mkdir -p $DIST_DIR/$ZIP_NAME/$INCLUDE_DIR/$INCLUDE_BLINK_CORE_DIR
+
+mkdir -p $DIST_DIR/$ZIP_NAME/$INCLUDE_DIR/blink_api
 
 # ===================
 
@@ -79,27 +81,29 @@ copy_with_check() {
 }
 
 # Бинарники
-copy_with_check "$BIN_DIR/$EXECUTABLE_BIN" "$DIST_DIR/$BIN_DIR/"
-copy_with_check "$BIN_DIR/$LIBRARY_BIN" "$DIST_DIR/$BIN_DIR/"
+copy_with_check "$BIN_DIR/$EXECUTABLE_BIN" "$DIST_DIR/$ZIP_NAME/$BIN_DIR/"
+copy_with_check "$BIN_DIR/$LIBRARY_BIN" "$DIST_DIR/$ZIP_NAME/$BIN_DIR/"
 
 # Конфиги
-copy_with_check "$CONFIG_DIR/$CONFIG_CORE_FILE" "$DIST_DIR/$CONFIG_DIR/"
+copy_with_check "$CONFIG_DIR/$CONFIG_CORE_FILE" "$DIST_DIR/$ZIP_NAME/$CONFIG_DIR/"
 
 # Заголовки (рекурсивно)
 if [ -d "$INCLUDE_DIR/$INCLUDE_BLINK_CORE_DIR" ]; then
-    cp -r "$INCLUDE_DIR/$INCLUDE_BLINK_CORE_DIR/"* "$DIST_DIR/$INCLUDE_DIR/$INCLUDE_BLINK_CORE_DIR/" && echo "[OK] Headers copied"
+    cp -r "$INCLUDE_DIR/$INCLUDE_BLINK_CORE_DIR/"* "$DIST_DIR/$ZIP_NAME/$INCLUDE_DIR/$INCLUDE_BLINK_CORE_DIR/" && echo "[OK] Headers copied"
 else
     echo "[ERROR] Directory with headers not found"
     exit 1
 fi
-copy_with_check "$INCLUDE_DIR/main_loop.h" "$DIST_DIR/$INCLUDE_DIR/"
+copy_with_check "$INCLUDE_DIR/main_loop.h" "$DIST_DIR/$ZIP_NAME/$INCLUDE_DIR/"
+
+copy_with_check "$INCLUDE_DIR/blink_api/api.h" "$DIST_DIR/$ZIP_NAME/$INCLUDE_DIR/blink_api/"
 
 # Документация
-copy_with_check "$README_CORE_FILE" "$DIST_DIR/"
+copy_with_check "$README_CORE_FILE" "$DIST_DIR/$ZIP_NAME/"
 
 # Скрипт распаковки
 if [ -f "$UNPACK_CORE_FILE" ]; then
-    cp -f "$UNPACK_CORE_FILE" "$DIST_DIR/" && echo "[OK] $UNPACK_CORE_FILE added"
+    cp -f "$UNPACK_CORE_FILE" "$DIST_DIR/$ZIP_NAME/" && echo "[OK] $UNPACK_CORE_FILE added"
 else
     echo "[INFO] $UNPACK_CORE_FILE not found, skipping"
 fi
@@ -110,12 +114,13 @@ fi
 echo "=== Creating an archive ==="
 
 cd "$DIST_DIR" || exit 1
-zip -r "$ZIP_NAME.zip" ./* > /dev/null && echo "[OK] Archive created: BLINK_CORE.zip" || echo "[ERROR] Failed to create archive"
+# zip -r "$ZIP_NAME.zip" ./* > /dev/null && echo "[OK] Archive created: BLINK_CORE.zip" || echo "[ERROR] Failed to create archive"
+zip -r "$ZIP_NAME.zip" "$ZIP_NAME" > /dev/null && echo "[OK] Archive created: $ZIP_NAME.zip" || echo "[ERROR] Failed to create archive"
 cd ..
 
 # === ИТОГ ===
 echo "=== Ready! ==="
 
-echo "Result: $DIST_DIR/BLINK_CORE.zip"
+echo "Result: $DIST_DIR/$ZIP_NAME | $DIST_DIR/$ZIP_NAME.zip"
 
 # ===================
