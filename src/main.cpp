@@ -1,8 +1,9 @@
-#include <iostream> // !!! Временно для печать в CLI
 #include "../include/blink_core/arg_parser.h"
 #include "../include/blink_core/config.h"
 #include "../include/blink_core/logger.h"
 #include "../include/main_loop.h"
+
+#include "../include/blink_api/api.h"
 
 int main( int argc, const char** argv ) {
     // === ИНИЦИАЛИЗАЦИЯ ЯДРА ===
@@ -15,7 +16,11 @@ int main( int argc, const char** argv ) {
 
     // === ПОДКЛЮЧЕНИЕ API ===
     #ifdef ENABLE_BLINK_API
-        // Инициализация API
+        if ( BLINK_API::init() ) {
+            blink_logger::log( "API module was connected", log_level::INFO );
+        } else {
+            blink_logger::log( "API module was not connected", log_level::ERROR );
+        }
     #endif
 
     // === ИНИЦИАЛИЗАЦИЯ ЗАВИСИМОСТЕЙ ===
