@@ -3,8 +3,6 @@
 #include "../include/blink_core/logger.h"
 #include "../include/main_loop.h"
 
-#include "../include/blink_api/api.h"
-
 int main( int argc, const char** argv ) {
     // === ИНИЦИАЛИЗАЦИЯ ЯДРА ===
     blink_logger::init();
