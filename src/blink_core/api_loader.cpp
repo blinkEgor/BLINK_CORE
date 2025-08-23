@@ -2,6 +2,7 @@
 #include <dlfcn.h>
 #include <stdexcept>
 #include <iostream>
+#include "../../include/blink_core/logger.h"
 
 ApiLoader::ApiLoader( const std::string& path ) : so_path( path ) {}
 
@@ -12,7 +13,7 @@ ApiLoader::~ApiLoader() {
 bool ApiLoader::load() {
 	handle = dlopen( so_path.c_str(), RTLD_LAZY );
 	if ( !handle ) {
-		std::cerr << "dlopen failed: " << dlerror() << std::endl;
+		blink_logger::log( "dlopen failed: " + std::to_string( dlerror() ), log_level::FATAL );
 		return false;
 	}
 
@@ -24,9 +25,11 @@ bool ApiLoader::load() {
 
 	api = create_api();
 	if ( !api ) {
-		std::cerr << "create_api() returned nullptr" << std::endl;
+		blink_logger::log( "create_api() returned nullptr", log_level::FATAL );
 		return false;
 	}
+
+	blink_logger::log( "API symbols loaded successfully", log_level::INFO );
 
 	return true;
 }
