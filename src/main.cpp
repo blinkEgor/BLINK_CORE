@@ -15,11 +15,12 @@ int main( int argc, const char** argv ) {
 
 	// === ПОДКЛЮЧЕНИЕ API ===
 	std::string api_path = blink_config::get( "blink_api_path", "bin/libblink_api.so" );
-	if ( blink_api_runtime::init( api_path ) ) {
-		blink_logger::log( "API module was connected", log_level::INFO );
-	} else {
-		blink_logger::log( "API module was not connected", log_level::ERROR );
+	if ( !blink_api_runtime::init( api_path ) ) {
+		blink_logger::log( "API module is required. Shutting down.", log_level::FATAL );
+		blink_logger::shutdown();
+		return 1;
 	}
+	blink_logger::log( "API module was connected", log_level::INFO );
 
 	// === ИНИЦИАЛИЗАЦИЯ ВНЕШНИХ ЗАВИСИМОСТЕЙ ===
 	#ifdef ENABLE_SDL2
