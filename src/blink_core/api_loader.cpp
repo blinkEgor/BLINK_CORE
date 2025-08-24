@@ -13,7 +13,7 @@ ApiLoader::~ApiLoader() {
 bool ApiLoader::load() {
 	handle = dlopen( so_path.c_str(), RTLD_LAZY );
 	if ( !handle ) {
-		blink_logger::log( "dlopen failed: " + std::to_string( dlerror() ), log_level::FATAL );
+		blink_logger::log( "dlopen failed: " + std::string( dlerror() ), log_level::FATAL );
 		return false;
 	}
 
