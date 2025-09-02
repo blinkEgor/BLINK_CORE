@@ -4,12 +4,18 @@ cmake_minimum_required(VERSION 3.16)
 # Это объявляет проект BLINK_CORE
 # VERSION 0.1 — это назначенная точка разработки
 # LANGUAGES CXX — проект на C++
-project(BLINK_CORE VERSION 0.1 LANGUAGES CXX)
+project(BLINK_CORE VERSION 1.7.0 LANGUAGES CXX)
 
 # Конфигурация сборки
 set(CMAKE_CXX_STANDARD 17)              # Требуемый стандарт C++
 set(CMAKE_CXX_STANDARD_REQUIRED ON)     # Не разрешать откат на более старые стандарты
 set(CMAKE_BUILD_TYPE Debug)             # Сборка в режиме Debug по умолчанию
+
+configure_file(	# Создаёт макрос с версией при сборке
+	${CMAKE_CURRENT_SOURCE_DIR}/include/blink_core/version.h.in
+	${CMAKE_CURRENT_SOURCE_DIR}/include/blink_core/version.h
+	@ONLY
+)
 
 # ОС Linux по умолчанию
 add_definitions(-DTARGET_OS_LINUX)

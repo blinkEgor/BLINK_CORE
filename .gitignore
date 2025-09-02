@@ -39,3 +39,6 @@ dist
 
 # vscode
 .vscode
+
+# Extra
+include/blink_core/version.h
