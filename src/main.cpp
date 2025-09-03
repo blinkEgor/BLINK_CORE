@@ -19,8 +19,12 @@ int main( int argc, const char** argv ) {
 		blink_logger::log( "API module is required. Shutting down.", log_level::FATAL );
 		blink_logger::shutdown();
 		return 1;
+	} else {
+		blink_logger::log( "API module was connected", log_level::INFO );
+// РЕАЛИЗУЙ В BLINK_API ПЕРЕДАЧУ ВЕРСИИ ЧЕРЕЗ "C" функцию, как с самим API
+//		blink_config::set( "blink_api_version", blink_api_runtime::get_version() );
 	}
-	blink_logger::log( "API module was connected", log_level::INFO );
+	blink_config::save();
 
 	// === ИНИЦИАЛИЗАЦИЯ ВНЕШНИХ ЗАВИСИМОСТЕЙ ===
 	#ifdef ENABLE_SDL2
