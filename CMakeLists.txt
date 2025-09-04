@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.16)
 # Это объявляет проект BLINK_CORE
 # VERSION 0.1 — это назначенная точка разработки
 # LANGUAGES CXX — проект на C++
-project(BLINK_CORE VERSION 1.7.0 LANGUAGES CXX)
+project(BLINK_CORE VERSION 1.7.1 LANGUAGES CXX)
 
 # Конфигурация сборки
 set(CMAKE_CXX_STANDARD 17)              # Требуемый стандарт C++
