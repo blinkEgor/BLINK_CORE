@@ -23,6 +23,8 @@ bool ApiLoader::load() {
 	api_update = load_symbol<api_update_t>( "api_update" );
 	api_exit = load_symbol<api_exit_t>( "api_exit" );
 
+	api_get_version = load_symbol<get_version_t>( "api_get_version" );
+
 	api = create_api();
 	if ( !api ) {
 		blink_logger::log( "create_api() returned nullptr", log_level::FATAL );
@@ -55,6 +57,10 @@ void ApiLoader::update() {
 
 bool ApiLoader::exit() {
 	return api && api_exit ? api_exit( api ) : false;
+}
+
+const char* ApiLoader::get_version() {
+	return api_get_version ? api_get_version() : "unknown";
 }
 
 template<typename T>

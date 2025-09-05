@@ -16,6 +16,8 @@ public:
 	void update();
 	bool exit();
 
+	const char* get_version();
+
 private:
 	void* handle = nullptr;
 	ApiHandle* api = nullptr;
@@ -26,11 +28,15 @@ private:
 	using api_update_t = void (*)(ApiHandle*);
 	using api_exit_t = bool (*)(ApiHandle*);
 
+	using get_version_t = const char* (*)();
+
 	create_api_t create_api = nullptr;
 	destroy_api_t destroy_api = nullptr;
 	api_init_t api_init = nullptr;
 	api_update_t api_update = nullptr;
 	api_exit_t api_exit = nullptr;
+
+	get_version_t api_get_version = nullptr;
 
 	std::string so_path;
 

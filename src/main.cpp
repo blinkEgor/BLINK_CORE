@@ -21,8 +21,7 @@ int main( int argc, const char** argv ) {
 		return 1;
 	} else {
 		blink_logger::log( "API module was connected", log_level::INFO );
-// РЕАЛИЗУЙ В BLINK_API ПЕРЕДАЧУ ВЕРСИИ ЧЕРЕЗ "C" функцию, как с самим API
-//		blink_config::set( "blink_api_version", blink_api_runtime::get_version() );
+		blink_config::set( "blink_api_version", blink_api_runtime::get_version() );
 	}
 	blink_config::save();
 

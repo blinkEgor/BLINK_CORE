@@ -7,5 +7,6 @@ namespace blink_api_runtime {
 	extern std::unique_ptr<ApiLoader> loader;
 
 	bool init( const std::string& path );
+	const char* get_version();
 	void shutdown();
 }

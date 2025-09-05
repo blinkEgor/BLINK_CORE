@@ -20,3 +20,10 @@ void blink_api_runtime::shutdown() {
 		loader.reset();	// вызовет ApiLoader::~ApiLoader -> unload()
 	}
 }
+
+const char* blink_api_runtime::get_version() {
+	if ( loader ) {
+		return loader->get_version();
+	}
+	return "unknown";
+}

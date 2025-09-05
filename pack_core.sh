@@ -92,7 +92,7 @@ if [ -d "$INCLUDE_DIR/$INCLUDE_BLINK_CORE_DIR" ]; then
 	# Удалить version.h.in если он скопировался
 	if [ -f "$DIST_DIR/$ZIP_NAME/$INCLUDE_DIR/$INCLUDE_BLINK_CORE_DIR/version.h.in" ]; then
 		rm "$DIST_DIR/$ZIP_NAME/$INCLUDE_DIR/$INCLUDE_BLINK_CORE_DIR/version.h.in"
-		echo "[INFO] version.h.in removed from package"
+		# echo "[INFO] version.h.in removed from package"
 	fi
 else
 	echo "[ERROR] Directory with headers not found"
