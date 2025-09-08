@@ -16,9 +16,9 @@
 echo "=== BLINK_CORE Installer ==="
 
 # Запрос целевой директории (относительно домашней)
-echo "Введите путь установки в целевую директорию относительно домашней директории (например: myproject или Desktop/myproject): "
-read RELATIVE_PATH
-TARGET_DIR="$HOME/$RELATIVE_PATH"
+echo "Введите путь для установки (абсолютный путь или относительный, например: ~/myproject или /path/to/project): "
+read TARGET_PATH
+TARGET_DIR="${TARGET_PATH//\~/$HOME}"	# Замена тильды(~) на $HOME
 
 mkdir -p "$TARGET_DIR"
 
@@ -28,9 +28,10 @@ cp -r bin configs include "$TARGET_DIR"/
 cp -f LICENSE "$TARGET_DIR"/
 
 # Запрос пути к libblink_api.so (относительно домашней)
-echo "Введите путь к директории с blink_api относительно домашней директории: "
-read RELATIVE_API_PATH
-API_PATH="$HOME/$RELATIVE_API_PATH/bin/libblink_api.so"
+echo "Введите путь к директории BLINK_API (абсолютный или относительный, например: ~/Downloads/API): "
+read API_DIR_PATH
+API_DIR_FULL="${API_DIR_PATH//\~/$HOME}"	# Замена тильды(~) на $HOME
+API_PATH="$API_DIR_FULL/bin/libblink_api.so"
 
 if [ -f "$API_PATH" ]; then
 	cp "$API_PATH" "$TARGET_DIR/bin/"
@@ -47,16 +48,16 @@ mkdir -p "$API_INCLUDE_DIR/stubs"
 mkdir -p "$TARGET_DIR/configs/api_plugins"
 
 # Копирование заголовочных файлов
-cp -r "$HOME/$RELATIVE_API_PATH/include/blink_api/abstractions"/*.h "$API_INCLUDE_DIR/abstractions/" 2>/dev/null || echo "Не найдены файлы abstractions"
-cp -r "$HOME/$RELATIVE_API_PATH/include/blink_api/stubs"/*.h "$API_INCLUDE_DIR/stubs/" 2>/dev/null || echo "Не найдены файлы stubs"
-cp "$HOME/$RELATIVE_API_PATH/include/blink_api/api.h" "$API_INCLUDE_DIR/" 2>/dev/null || echo "Не найден api.h"
-cp "$HOME/$RELATIVE_API_PATH/include/blink_api/version.h" "$API_INCLUDE_DIR/" 2>/dev/null || echo "Не найден version.h"
+cp -r "$API_DIR_FULL/include/blink_api/abstractions"/*.h "$API_INCLUDE_DIR/abstractions/" 2>/dev/null || echo "Не найдены файлы abstractions"
+cp -r "$API_DIR_FULL/include/blink_api/stubs"/*.h "$API_INCLUDE_DIR/stubs/" 2>/dev/null || echo "Не найдены файлы stubs"
+cp "$API_DIR_FULL/include/blink_api/api.h" "$API_INCLUDE_DIR/" 2>/dev/null || echo "Не найден api.h"
+cp "$API_DIR_FULL/include/blink_api/version.h" "$API_INCLUDE_DIR/" 2>/dev/null || echo "Не найден version.h"
 
 # Копирование конфигов
-cp "$HOME/$RELATIVE_API_PATH/configs/api_plugins"/*.conf "$TARGET_DIR/configs/api_plugins/" 2>/dev/null || echo "Не найдены конфиги api_plugins"
+cp "$API_DIR_FULL/configs/api_plugins"/*.conf "$TARGET_DIR/configs/api_plugins/" 2>/dev/null || echo "Не найдены конфиги api_plugins"
 
 # Копирование документации
-cp "$HOME/$RELATIVE_API_PATH/README_API.md" "$TARGET_DIR/" 2>/dev/null || echo "Не найден README_API.md"
+cp "$API_DIR_FULL/README_API.md" "$TARGET_DIR/" 2>/dev/null || echo "Не найден README_API.md"
 
 echo "=== Установка завершена ==="
 echo "Ядро и подхваченные модули установлены в: $TARGET_DIR"
